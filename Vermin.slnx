@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Vermin.Core/">
+    <Project Path="src/Vermin.Core/Vermin.csproj" />
+  </Folder>
+</Solution>
