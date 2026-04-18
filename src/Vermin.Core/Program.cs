@@ -42,6 +42,7 @@ internal static class Program
                         AutoServiceScopes = true,
                         DefaultRunMode = RunMode.Async,
                         UseCompiledLambda = true,
+                        EnableAutocompleteHandlers = true,
                         LogLevel = LogSeverity.Info
                     });
             builder.Services.AddSingleton(
@@ -50,7 +51,7 @@ internal static class Program
                         GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMembers,
                         AlwaysDownloadUsers = true,
                         LogGatewayIntentWarnings = false,
-                        UseInteractionSnowflakeDate = true,
+                        UseInteractionSnowflakeDate = false,
                         MessageCacheSize = 100,
                         LogLevel = LogSeverity.Info
                     });

@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>463f3546-d9d8-44b0-9ee2-0db0caa0907a</UserSecretsId>
+    <UserSecretsId>a9d40e99-dda4-4380-bf76-d4e6f71cf3a9</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -23,13 +23,12 @@ public class InteractionStartupService(
                 assembly: Assembly.GetEntryAssembly(),
                 services: _serviceProvider);
 
-        _socketClient.InteractionCreated += HandleInteraction;
-        _interactionService.InteractionExecuted += HandleInteractionExecuted;
         _socketClient.Ready += RegisterCommands;
+        _socketClient.InteractionCreated += InteractionCreatedAsync;
+        _interactionService.InteractionExecuted += InteractionExecutedAsync;
     }
 
-    //TODO: Handle integration stuff
-    private async Task HandleInteraction(
+    private async Task InteractionCreatedAsync(
             SocketInteraction interaction)
     {
         try
@@ -47,22 +46,34 @@ public class InteractionStartupService(
             _logger.LogError(
                     exception: exception,
                     message: "Interaction execution failed");
-
-            if (interaction.HasResponded)
-                return;
-
-            await interaction.RespondAsync(
-                    text: "Error processing command",
-                    ephemeral: true);
         }
     }
 
-    private Task HandleInteractionExecuted(
+    private async Task InteractionExecutedAsync(
         ICommandInfo command,
         IInteractionContext context,
         IResult result)
     {
-        return Task.CompletedTask;
+        if (result.IsSuccess)
+            return;
+
+        _logger.LogError(
+                message: "Command {CommandName} failed - Reason: {ErrorReason}",
+                args: [command.Name, result.ErrorReason]);
+
+        var response = $"Command {command.Name} failed";
+
+        if (context.Interaction.HasResponded)
+        {
+            await context.Interaction.FollowupAsync(
+                    text: response,
+                    ephemeral: true);
+            return;
+        }
+
+        await context.Interaction.RespondAsync(
+                text: response,
+                ephemeral: true);
     }
 
     private async Task RegisterCommands()

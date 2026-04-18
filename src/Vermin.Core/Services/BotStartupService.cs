@@ -10,36 +10,31 @@ public class BotStartupService(
         ILogger<BotStartupService> logger,
         DiscordSocketClient socketClient,
         InteractionService interactionService,
-        IOptions<TokenOptions> tokenOptions) : BackgroundService
+        IOptions<TokenOptions> tokenOptions) : IHostedService
 {
     private readonly ILogger<BotStartupService> _logger = logger;
     private readonly DiscordSocketClient _socketClient = socketClient;
     private readonly InteractionService _interactionService = interactionService;
     private readonly TokenOptions _tokenOptions = tokenOptions.Value;
 
-    protected override Task ExecuteAsync(
+    public async Task StartAsync(
             CancellationToken stoppingToken)
     {
         _socketClient.Log += Log;
         _interactionService.Log += Log;
 
-        return _socketClient.LoginAsync(
+        await _socketClient.LoginAsync(
                 tokenType: TokenType.Bot,
                 token: _tokenOptions.DiscordBotToken,
-                validateToken: true)
-            .ContinueWith(_ =>
-                    _socketClient.StartAsync(),
-                    stoppingToken);
+                validateToken: true);
+
+        await _socketClient.StartAsync();
     }
 
-    public override Task StopAsync(
+    public async Task StopAsync(
             CancellationToken cancellationToken)
     {
-        if (ExecuteTask is null)
-            return Task.CompletedTask;
-
-        base.StopAsync(cancellationToken);
-        return _socketClient.StopAsync();
+        await _socketClient.StopAsync();
     }
 
 
