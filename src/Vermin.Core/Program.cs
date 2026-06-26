@@ -11,7 +11,7 @@ namespace Vermin;
 internal static class Program
 {
     private static async Task Main(
-            string[] args)
+        string[] args)
     {
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
@@ -21,46 +21,46 @@ internal static class Program
         try
         {
             var builder = Host.CreateApplicationBuilder(
-                    args: args);
+                args: args);
 
             builder.Services.AddSerilog((services, loggerConfig) => loggerConfig
-                    .Enrich.FromLogContext()
-                    .WriteTo.File(
-                        path: "logs/log.log",
-                        shared: true,
-                        rollingInterval: RollingInterval.Hour,
-                        rollOnFileSizeLimit: true,
-                        retainedFileTimeLimit: TimeSpan.FromDays(12))
-                    .WriteTo.Console()
-                    .ReadFrom.Services(services));
+                .Enrich.FromLogContext()
+                .WriteTo.File(
+                    path: "logs/log.log",
+                    shared: true,
+                    rollingInterval: RollingInterval.Hour,
+                    rollOnFileSizeLimit: true,
+                    retainedFileTimeLimit: TimeSpan.FromDays(12))
+                .WriteTo.Console()
+                .ReadFrom.Services(services));
 
             builder.Services.Configure<TokenOptions>(
-                    builder.Configuration.GetSection(
-                        key: nameof(TokenOptions)));
+                builder.Configuration.GetSection(
+                    key: nameof(TokenOptions)));
 
             builder.Services.AddSingleton(
-                    new InteractionServiceConfig
-                    {
-                        AutoServiceScopes = true,
-                        DefaultRunMode = RunMode.Async,
-                        UseCompiledLambda = true,
-                        EnableAutocompleteHandlers = true,
-                        LogLevel = LogSeverity.Info
-                    });
+                new InteractionServiceConfig
+                {
+                    AutoServiceScopes = true,
+                    DefaultRunMode = RunMode.Async,
+                    UseCompiledLambda = true,
+                    EnableAutocompleteHandlers = true,
+                    LogLevel = LogSeverity.Info
+                });
             builder.Services.AddSingleton(
-                    new DiscordSocketConfig
-                    {
-                        GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMembers,
-                        AlwaysDownloadUsers = true,
-                        LogGatewayIntentWarnings = false,
-                        UseInteractionSnowflakeDate = false,
-                        MessageCacheSize = 100,
-                        LogLevel = LogSeverity.Info
-                    });
+                new DiscordSocketConfig
+                {
+                    GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMembers,
+                    AlwaysDownloadUsers = true,
+                    LogGatewayIntentWarnings = false,
+                    UseInteractionSnowflakeDate = false,
+                    MessageCacheSize = 100,
+                    LogLevel = LogSeverity.Info
+                });
             builder.Services.AddSingleton<DiscordSocketClient>();
             builder.Services.AddSingleton<InteractionService>();
             builder.Services.AddSingleton<IRestClientProvider>(sp => sp
-                    .GetRequiredService<DiscordSocketClient>());
+                .GetRequiredService<DiscordSocketClient>());
 
             builder.Services.AddHostedService<BotStartupService>();
             builder.Services.AddHostedService<InteractionStartupService>();
@@ -72,8 +72,8 @@ internal static class Program
         catch (Exception exception)
         {
             Log.Fatal(
-                    exception: exception,
-                    messageTemplate: "Host terminated unexpectedly");
+                exception: exception,
+                messageTemplate: "Host terminated unexpectedly");
         }
         finally
         {

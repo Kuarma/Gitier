@@ -7,10 +7,10 @@ using Vermin.Models;
 namespace Vermin.Services;
 
 public class BotStartupService(
-        ILogger<BotStartupService> logger,
-        DiscordSocketClient socketClient,
-        InteractionService interactionService,
-        IOptions<TokenOptions> tokenOptions) : IHostedService
+    ILogger<BotStartupService> logger,
+    DiscordSocketClient socketClient,
+    InteractionService interactionService,
+    IOptions<TokenOptions> tokenOptions) : IHostedService
 {
     private readonly ILogger<BotStartupService> _logger = logger;
     private readonly DiscordSocketClient _socketClient = socketClient;
@@ -18,27 +18,27 @@ public class BotStartupService(
     private readonly TokenOptions _tokenOptions = tokenOptions.Value;
 
     public async Task StartAsync(
-            CancellationToken stoppingToken)
+        CancellationToken stoppingToken)
     {
         _socketClient.Log += Log;
         _interactionService.Log += Log;
 
         await _socketClient.LoginAsync(
-                tokenType: TokenType.Bot,
-                token: _tokenOptions.DiscordBotToken,
-                validateToken: true);
+            tokenType: TokenType.Bot,
+            token: _tokenOptions.DiscordBotToken,
+            validateToken: true);
 
         await _socketClient.StartAsync();
     }
 
     public async Task StopAsync(
-            CancellationToken cancellationToken)
+        CancellationToken cancellationToken)
     {
         await _socketClient.StopAsync();
     }
 
     private Task Log(
-            LogMessage message)
+        LogMessage message)
     {
         var level = message.Severity switch
         {
@@ -50,11 +50,11 @@ public class BotStartupService(
         };
 
         _logger.Log(
-                logLevel: level,
-                eventId: default,
-                state: message,
-                exception: message.Exception,
-                formatter: (state, exception) => $"{state.Message} - {exception}");
+            logLevel: level,
+            eventId: default,
+            state: message,
+            exception: message.Exception,
+            formatter: (state, exception) => $"{state.Message} - {exception}");
 
         return Task.CompletedTask;
     }
