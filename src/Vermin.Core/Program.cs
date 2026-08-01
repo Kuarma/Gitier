@@ -2,11 +2,12 @@ using Discord;
 using Discord.Interactions;
 using Discord.Rest;
 using Discord.WebSocket;
+using Microsoft.AspNetCore.Builder;
 using Serilog;
 using Vermin.Models;
 using Vermin.Services;
 
-namespace Vermin;
+namespace Vermin.Core;
 
 internal static class Program
 {
@@ -20,7 +21,7 @@ internal static class Program
 
         try
         {
-            var builder = Host.CreateApplicationBuilder(
+            var builder = WebApplication.CreateBuilder(
                 args: args);
 
             builder.Services.AddSerilog((services, loggerConfig) => loggerConfig

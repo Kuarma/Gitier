@@ -32,10 +32,8 @@ public class BotStartupService(
     }
 
     public async Task StopAsync(
-        CancellationToken cancellationToken)
-    {
+        CancellationToken cancellationToken) =>
         await _socketClient.StopAsync();
-    }
 
     private Task Log(
         LogMessage message)
